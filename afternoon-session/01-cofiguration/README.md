@@ -14,12 +14,26 @@ You can use `configs/general.py` as a reference for the configuration structure.
 Run `make mcu-gen` with the Python config you want to test:
 
 ```sh
-make mcu-gen PYTHON_X_HEEP_CONFIG=configs/00.py X_HEEP_CFG=configs/python_unsupported.hjson
+make mcu-gen PYTHON_X_HEEP_CFG=configs/00.py X_HEEP_CFG=configs/python_unsupported.hjson
 ```
 
 Replace `configs/00.py` with `configs/01.py`, `configs/02.py`, or `configs/03.py` as needed.
 
 Then inspect the generated output in `x-heep-main`.
+
+To actually test that everything worked correctly try to run the verilator simulation of the hello_world and the example_matmul applications.
+
+How can you print the cycles? Edit the the example_matmul application to print the execution cycles of the same application for every configuration.
+
+Report here the cycle counts.
+
+| Config   | cycles   | 
+|----------|----------|
+|  00.py   |          |
+|  01.py   |          |
+|  02.py   |          |
+|  03.py   |          |
+
 
 ## Target Behavior of Each Configuration
 
