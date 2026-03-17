@@ -1,5 +1,3 @@
-![HEEPup logo](../img/heep-up.png)
-
 # HEEPup
 
 Environment setup guide for the 20/03 tutorial HEEPup.
