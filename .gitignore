@@ -1,0 +1,21 @@
+
+*.log
+build/
+*.so
+*.hex
+*.elf
+*.dis
+*.map
+*.do
+*.jou
+*.str
+.Xil/
+.venv/
+__pycache__/
+
+# User-dependent configuration files
+.vscode
+.continue
+private/
+.DS_Store
+
