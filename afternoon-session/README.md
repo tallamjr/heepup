@@ -200,4 +200,4 @@ export RISCV_XHEEP="$(realpath tools/risc-v)"
 ## Notes and troubleshooting
 
 - RISC-V toolchain download is large (~1.3 GB) and may be slow.
-- If `conda` is not found, install Miniconda/Anaconda and re-run.
+- If `conda` is not found, install [Miniconda/Anaconda](https://www.anaconda.com/docs/getting-started/miniconda/instal) and re-run.
