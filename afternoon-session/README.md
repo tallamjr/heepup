@@ -121,7 +121,7 @@ rm -rf /tmp/riscv-extract riscv.zip
 export RISCV_XHEEP="$(realpath tools/risc-v)"
 ```
 
-Linux x86_64:
+Ubuntu x86_64 (>= 22.04:
 
 ```bash
 mkdir -p tools/risc-v
