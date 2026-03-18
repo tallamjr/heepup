@@ -133,6 +133,18 @@ rm riscv.tar.gz
 export RISCV_XHEEP="$(realpath tools/risc-v)"
 ```
 
+Linux x86_64 (Ubuntu 20.04):
+
+```bash
+mkdir -p tools/risc-v
+wget -q --show-progress \
+    "https://buildbot.embecosm.com/job/corev-gcc-ubuntu2004/47/artifact/corev-openhw-gcc-ubuntu2004-20250316.tar.gz" \
+    -O riscv.tar.gz
+tar -xzf riscv.tar.gz -C tools/risc-v --strip-components=1
+rm riscv.tar.gz
+export RISCV_XHEEP="$(realpath tools/risc-v)"
+```
+
 ### Step 4/5 - Verilator v5.040
 
 If missing, build it in `tools/verilator` (or another path you prefer).
