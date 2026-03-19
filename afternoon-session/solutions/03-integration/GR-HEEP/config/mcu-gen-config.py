@@ -51,7 +51,7 @@ def config():
     # - 2 x 32kiB firmware and data
     # - 2 x 16kiB interleaved banks
     memory_ss = MemorySS()
-    memory_ss.add_ram_banks([32] * 2)
+    memory_ss.add_ram_banks([32] * 4)
     memory_ss.add_ram_banks_il(4, 16, "data_interleaved")
     # Linker script sections
     memory_ss.add_linker_section(LinkerSection.by_size("code", 0, 0x0000E800))
