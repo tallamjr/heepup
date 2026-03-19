@@ -118,10 +118,10 @@ def gr_heep_config():
 
     # External slaves memory map
     ext_xbar_slaves = {
-        #     "slave_0": {
-        #         "offset":    0x00000000,
-        #         "length":    0x00010000,
-        #     },
+        "keccak": {
+            "offset":    0x00000000,
+            "length":    0x00010000,
+        },
         #     "slave_1": {
         #         "offset":    0x00010000,
         #         "length":    0x00010000,
@@ -130,10 +130,10 @@ def gr_heep_config():
 
     # External peripherals
     ext_periph = {
-        #     "peripheral_0": {
-        #         "offset": 0x00000000,
-        #         "length": 0x00001000,
-        #     },
+        "keccak": {
+            "offset": 0x00000000,
+            "length": 0x00001000,
+        },
         #     "peripheral_1": {
         #         "offset": 0x00001000,
         #         "length": 0x00001000,
@@ -146,7 +146,7 @@ def gr_heep_config():
 
     ao_spc_num = 1
 
-    external_interrupts = 0
+    external_interrupts = 1
 
     # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
     # Do not modify below this line unless you know what you are doing
