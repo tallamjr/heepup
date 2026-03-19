@@ -14,6 +14,8 @@
   exclude_from_upstream: [
     ".github",
     "ci",
+    "sw",
+    "keccak-driver"
   ]
   
 }
