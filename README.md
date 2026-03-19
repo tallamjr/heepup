@@ -28,8 +28,12 @@ A guided, practical session where participants configure, build, and simulate an
 │   ├── conda_environment.yml # Conda environment definition
 │   ├── python-requirements.txt
 │   ├── 00-demo/              # Demo: generate, build, and run X-HEEP
-│   └── 01-cofiguration/      # Exercise: write Python configuration files
-│       └── ...solution/      # Reference solutions
+│   ├── 01-cofiguration/      # Exercise: write Python configuration files
+│   ├── 02-fpga/              # Exercise: generate FPGA bitstream and depoly the design
+│   │   └── ...bitstream/     # Ready-to-go bitstreams
+│   ├── 03-integration/       # Exercise: configure gr-heep with external accelerators
+│   ├── 04-integration-fpga/  # Exercise: generate FPGA bitstream and depoly the accelerators
+│   └── solutions/            # Reference solutions for ex. 01 & 03
 └── img/
 ```
 
