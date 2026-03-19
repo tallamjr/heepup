@@ -8,6 +8,7 @@
 import re
 from x_heep_gen.xheep import XHeep
 from x_heep_gen.cpu.cpu import CPU
+from x_heep_gen.cv_x_if import CvXIf
 from x_heep_gen.bus_type import BusType
 from x_heep_gen.memory_ss.memory_ss import MemorySS
 from x_heep_gen.memory_ss.linker_section import LinkerSection
@@ -47,6 +48,17 @@ def config():
     # Set cv32e40px CPU
     system.set_cpu(CPU("cv32e40px"))
 
+    system.set_xif(
+            CvXIf(
+                x_num_rs=3,  
+                x_id_width=4,
+                x_mem_width=32,
+                x_rfr_width=32,
+                x_rfw_width=32,
+                x_misa=0x0,
+                x_ecs_xs=0x0,
+            )
+        )
     # Memory subsystem
     # - 2 x 32kiB firmware and data
     # - 2 x 16kiB interleaved banks
