@@ -19,6 +19,7 @@ package keccak_data_reg_pkg;
 
   typedef struct packed {
     logic [31:0] d;
+    logic        de;
   } keccak_data_hw2reg_dout_mreg_t;
 
   // Register -> HW type
@@ -28,7 +29,7 @@ package keccak_data_reg_pkg;
 
   // HW -> register type
   typedef struct packed {
-    keccak_data_hw2reg_dout_mreg_t [49:0] dout; // [1599:0]
+    keccak_data_hw2reg_dout_mreg_t [49:0] dout; // [1649:0]
   } keccak_data_hw2reg_t;
 
   // Register offsets
@@ -132,58 +133,6 @@ package keccak_data_reg_pkg;
   parameter logic [BlockAw-1:0] KECCAK_DATA_DOUT_47_OFFSET = 9'h 184;
   parameter logic [BlockAw-1:0] KECCAK_DATA_DOUT_48_OFFSET = 9'h 188;
   parameter logic [BlockAw-1:0] KECCAK_DATA_DOUT_49_OFFSET = 9'h 18c;
-
-  // Reset values for hwext registers and their fields
-  parameter logic [31:0] KECCAK_DATA_DOUT_0_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_1_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_2_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_3_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_4_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_5_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_6_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_7_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_8_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_9_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_10_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_11_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_12_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_13_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_14_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_15_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_16_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_17_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_18_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_19_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_20_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_21_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_22_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_23_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_24_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_25_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_26_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_27_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_28_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_29_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_30_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_31_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_32_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_33_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_34_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_35_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_36_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_37_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_38_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_39_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_40_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_41_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_42_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_43_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_44_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_45_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_46_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_47_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_48_RESVAL = 32'h 0;
-  parameter logic [31:0] KECCAK_DATA_DOUT_49_RESVAL = 32'h 0;
 
   // Register index
   typedef enum int {

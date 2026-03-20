@@ -33,7 +33,7 @@ module keccak_data_reg_top #(
   // register signals
   logic           reg_we;
   logic           reg_re;
-  logic [AW-1:0]  reg_addr;
+  logic [BlockAw-1:0]  reg_addr;
   logic [DW-1:0]  reg_wdata;
   logic [DBW-1:0] reg_be;
   logic [DW-1:0]  reg_rdata;
@@ -54,7 +54,7 @@ module keccak_data_reg_top #(
 
   assign reg_we = reg_intf_req.valid & reg_intf_req.write;
   assign reg_re = reg_intf_req.valid & ~reg_intf_req.write;
-  assign reg_addr = reg_intf_req.addr;
+  assign reg_addr = reg_intf_req.addr[BlockAw-1:0];
   assign reg_wdata = reg_intf_req.wdata;
   assign reg_be = reg_intf_req.wstrb;
   assign reg_intf_rsp.rdata = reg_rdata;
@@ -169,105 +169,55 @@ module keccak_data_reg_top #(
   logic [31:0] din_49_wd;
   logic din_49_we;
   logic [31:0] dout_0_qs;
-  logic dout_0_re;
   logic [31:0] dout_1_qs;
-  logic dout_1_re;
   logic [31:0] dout_2_qs;
-  logic dout_2_re;
   logic [31:0] dout_3_qs;
-  logic dout_3_re;
   logic [31:0] dout_4_qs;
-  logic dout_4_re;
   logic [31:0] dout_5_qs;
-  logic dout_5_re;
   logic [31:0] dout_6_qs;
-  logic dout_6_re;
   logic [31:0] dout_7_qs;
-  logic dout_7_re;
   logic [31:0] dout_8_qs;
-  logic dout_8_re;
   logic [31:0] dout_9_qs;
-  logic dout_9_re;
   logic [31:0] dout_10_qs;
-  logic dout_10_re;
   logic [31:0] dout_11_qs;
-  logic dout_11_re;
   logic [31:0] dout_12_qs;
-  logic dout_12_re;
   logic [31:0] dout_13_qs;
-  logic dout_13_re;
   logic [31:0] dout_14_qs;
-  logic dout_14_re;
   logic [31:0] dout_15_qs;
-  logic dout_15_re;
   logic [31:0] dout_16_qs;
-  logic dout_16_re;
   logic [31:0] dout_17_qs;
-  logic dout_17_re;
   logic [31:0] dout_18_qs;
-  logic dout_18_re;
   logic [31:0] dout_19_qs;
-  logic dout_19_re;
   logic [31:0] dout_20_qs;
-  logic dout_20_re;
   logic [31:0] dout_21_qs;
-  logic dout_21_re;
   logic [31:0] dout_22_qs;
-  logic dout_22_re;
   logic [31:0] dout_23_qs;
-  logic dout_23_re;
   logic [31:0] dout_24_qs;
-  logic dout_24_re;
   logic [31:0] dout_25_qs;
-  logic dout_25_re;
   logic [31:0] dout_26_qs;
-  logic dout_26_re;
   logic [31:0] dout_27_qs;
-  logic dout_27_re;
   logic [31:0] dout_28_qs;
-  logic dout_28_re;
   logic [31:0] dout_29_qs;
-  logic dout_29_re;
   logic [31:0] dout_30_qs;
-  logic dout_30_re;
   logic [31:0] dout_31_qs;
-  logic dout_31_re;
   logic [31:0] dout_32_qs;
-  logic dout_32_re;
   logic [31:0] dout_33_qs;
-  logic dout_33_re;
   logic [31:0] dout_34_qs;
-  logic dout_34_re;
   logic [31:0] dout_35_qs;
-  logic dout_35_re;
   logic [31:0] dout_36_qs;
-  logic dout_36_re;
   logic [31:0] dout_37_qs;
-  logic dout_37_re;
   logic [31:0] dout_38_qs;
-  logic dout_38_re;
   logic [31:0] dout_39_qs;
-  logic dout_39_re;
   logic [31:0] dout_40_qs;
-  logic dout_40_re;
   logic [31:0] dout_41_qs;
-  logic dout_41_re;
   logic [31:0] dout_42_qs;
-  logic dout_42_re;
   logic [31:0] dout_43_qs;
-  logic dout_43_re;
   logic [31:0] dout_44_qs;
-  logic dout_44_re;
   logic [31:0] dout_45_qs;
-  logic dout_45_re;
   logic [31:0] dout_46_qs;
-  logic dout_46_re;
   logic [31:0] dout_47_qs;
-  logic dout_47_re;
   logic [31:0] dout_48_qs;
-  logic dout_48_re;
   logic [31:0] dout_49_qs;
-  logic dout_49_re;
 
   // Register instances
 
@@ -1574,802 +1524,1302 @@ module keccak_data_reg_top #(
 
 
   // Subregister 0 of Multireg dout
-  // R[dout_0]: V(True)
+  // R[dout_0]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_0 (
-    .re     (dout_0_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[0].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[0].de),
+    .d      (hw2reg.dout[0].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_0_qs)
   );
 
   // Subregister 1 of Multireg dout
-  // R[dout_1]: V(True)
+  // R[dout_1]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_1 (
-    .re     (dout_1_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[1].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[1].de),
+    .d      (hw2reg.dout[1].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_1_qs)
   );
 
   // Subregister 2 of Multireg dout
-  // R[dout_2]: V(True)
+  // R[dout_2]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_2 (
-    .re     (dout_2_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[2].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[2].de),
+    .d      (hw2reg.dout[2].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_2_qs)
   );
 
   // Subregister 3 of Multireg dout
-  // R[dout_3]: V(True)
+  // R[dout_3]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_3 (
-    .re     (dout_3_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[3].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[3].de),
+    .d      (hw2reg.dout[3].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_3_qs)
   );
 
   // Subregister 4 of Multireg dout
-  // R[dout_4]: V(True)
+  // R[dout_4]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_4 (
-    .re     (dout_4_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[4].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[4].de),
+    .d      (hw2reg.dout[4].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_4_qs)
   );
 
   // Subregister 5 of Multireg dout
-  // R[dout_5]: V(True)
+  // R[dout_5]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_5 (
-    .re     (dout_5_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[5].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[5].de),
+    .d      (hw2reg.dout[5].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_5_qs)
   );
 
   // Subregister 6 of Multireg dout
-  // R[dout_6]: V(True)
+  // R[dout_6]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_6 (
-    .re     (dout_6_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[6].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[6].de),
+    .d      (hw2reg.dout[6].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_6_qs)
   );
 
   // Subregister 7 of Multireg dout
-  // R[dout_7]: V(True)
+  // R[dout_7]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_7 (
-    .re     (dout_7_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[7].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[7].de),
+    .d      (hw2reg.dout[7].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_7_qs)
   );
 
   // Subregister 8 of Multireg dout
-  // R[dout_8]: V(True)
+  // R[dout_8]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_8 (
-    .re     (dout_8_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[8].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[8].de),
+    .d      (hw2reg.dout[8].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_8_qs)
   );
 
   // Subregister 9 of Multireg dout
-  // R[dout_9]: V(True)
+  // R[dout_9]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_9 (
-    .re     (dout_9_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[9].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[9].de),
+    .d      (hw2reg.dout[9].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_9_qs)
   );
 
   // Subregister 10 of Multireg dout
-  // R[dout_10]: V(True)
+  // R[dout_10]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_10 (
-    .re     (dout_10_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[10].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[10].de),
+    .d      (hw2reg.dout[10].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_10_qs)
   );
 
   // Subregister 11 of Multireg dout
-  // R[dout_11]: V(True)
+  // R[dout_11]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_11 (
-    .re     (dout_11_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[11].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[11].de),
+    .d      (hw2reg.dout[11].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_11_qs)
   );
 
   // Subregister 12 of Multireg dout
-  // R[dout_12]: V(True)
+  // R[dout_12]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_12 (
-    .re     (dout_12_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[12].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[12].de),
+    .d      (hw2reg.dout[12].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_12_qs)
   );
 
   // Subregister 13 of Multireg dout
-  // R[dout_13]: V(True)
+  // R[dout_13]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_13 (
-    .re     (dout_13_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[13].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[13].de),
+    .d      (hw2reg.dout[13].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_13_qs)
   );
 
   // Subregister 14 of Multireg dout
-  // R[dout_14]: V(True)
+  // R[dout_14]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_14 (
-    .re     (dout_14_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[14].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[14].de),
+    .d      (hw2reg.dout[14].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_14_qs)
   );
 
   // Subregister 15 of Multireg dout
-  // R[dout_15]: V(True)
+  // R[dout_15]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_15 (
-    .re     (dout_15_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[15].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[15].de),
+    .d      (hw2reg.dout[15].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_15_qs)
   );
 
   // Subregister 16 of Multireg dout
-  // R[dout_16]: V(True)
+  // R[dout_16]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_16 (
-    .re     (dout_16_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[16].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[16].de),
+    .d      (hw2reg.dout[16].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_16_qs)
   );
 
   // Subregister 17 of Multireg dout
-  // R[dout_17]: V(True)
+  // R[dout_17]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_17 (
-    .re     (dout_17_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[17].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[17].de),
+    .d      (hw2reg.dout[17].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_17_qs)
   );
 
   // Subregister 18 of Multireg dout
-  // R[dout_18]: V(True)
+  // R[dout_18]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_18 (
-    .re     (dout_18_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[18].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[18].de),
+    .d      (hw2reg.dout[18].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_18_qs)
   );
 
   // Subregister 19 of Multireg dout
-  // R[dout_19]: V(True)
+  // R[dout_19]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_19 (
-    .re     (dout_19_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[19].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[19].de),
+    .d      (hw2reg.dout[19].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_19_qs)
   );
 
   // Subregister 20 of Multireg dout
-  // R[dout_20]: V(True)
+  // R[dout_20]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_20 (
-    .re     (dout_20_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[20].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[20].de),
+    .d      (hw2reg.dout[20].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_20_qs)
   );
 
   // Subregister 21 of Multireg dout
-  // R[dout_21]: V(True)
+  // R[dout_21]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_21 (
-    .re     (dout_21_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[21].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[21].de),
+    .d      (hw2reg.dout[21].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_21_qs)
   );
 
   // Subregister 22 of Multireg dout
-  // R[dout_22]: V(True)
+  // R[dout_22]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_22 (
-    .re     (dout_22_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[22].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[22].de),
+    .d      (hw2reg.dout[22].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_22_qs)
   );
 
   // Subregister 23 of Multireg dout
-  // R[dout_23]: V(True)
+  // R[dout_23]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_23 (
-    .re     (dout_23_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[23].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[23].de),
+    .d      (hw2reg.dout[23].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_23_qs)
   );
 
   // Subregister 24 of Multireg dout
-  // R[dout_24]: V(True)
+  // R[dout_24]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_24 (
-    .re     (dout_24_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[24].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[24].de),
+    .d      (hw2reg.dout[24].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_24_qs)
   );
 
   // Subregister 25 of Multireg dout
-  // R[dout_25]: V(True)
+  // R[dout_25]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_25 (
-    .re     (dout_25_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[25].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[25].de),
+    .d      (hw2reg.dout[25].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_25_qs)
   );
 
   // Subregister 26 of Multireg dout
-  // R[dout_26]: V(True)
+  // R[dout_26]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_26 (
-    .re     (dout_26_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[26].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[26].de),
+    .d      (hw2reg.dout[26].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_26_qs)
   );
 
   // Subregister 27 of Multireg dout
-  // R[dout_27]: V(True)
+  // R[dout_27]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_27 (
-    .re     (dout_27_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[27].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[27].de),
+    .d      (hw2reg.dout[27].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_27_qs)
   );
 
   // Subregister 28 of Multireg dout
-  // R[dout_28]: V(True)
+  // R[dout_28]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_28 (
-    .re     (dout_28_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[28].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[28].de),
+    .d      (hw2reg.dout[28].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_28_qs)
   );
 
   // Subregister 29 of Multireg dout
-  // R[dout_29]: V(True)
+  // R[dout_29]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_29 (
-    .re     (dout_29_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[29].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[29].de),
+    .d      (hw2reg.dout[29].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_29_qs)
   );
 
   // Subregister 30 of Multireg dout
-  // R[dout_30]: V(True)
+  // R[dout_30]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_30 (
-    .re     (dout_30_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[30].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[30].de),
+    .d      (hw2reg.dout[30].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_30_qs)
   );
 
   // Subregister 31 of Multireg dout
-  // R[dout_31]: V(True)
+  // R[dout_31]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_31 (
-    .re     (dout_31_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[31].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[31].de),
+    .d      (hw2reg.dout[31].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_31_qs)
   );
 
   // Subregister 32 of Multireg dout
-  // R[dout_32]: V(True)
+  // R[dout_32]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_32 (
-    .re     (dout_32_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[32].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[32].de),
+    .d      (hw2reg.dout[32].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_32_qs)
   );
 
   // Subregister 33 of Multireg dout
-  // R[dout_33]: V(True)
+  // R[dout_33]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_33 (
-    .re     (dout_33_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[33].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[33].de),
+    .d      (hw2reg.dout[33].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_33_qs)
   );
 
   // Subregister 34 of Multireg dout
-  // R[dout_34]: V(True)
+  // R[dout_34]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_34 (
-    .re     (dout_34_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[34].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[34].de),
+    .d      (hw2reg.dout[34].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_34_qs)
   );
 
   // Subregister 35 of Multireg dout
-  // R[dout_35]: V(True)
+  // R[dout_35]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_35 (
-    .re     (dout_35_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[35].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[35].de),
+    .d      (hw2reg.dout[35].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_35_qs)
   );
 
   // Subregister 36 of Multireg dout
-  // R[dout_36]: V(True)
+  // R[dout_36]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_36 (
-    .re     (dout_36_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[36].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[36].de),
+    .d      (hw2reg.dout[36].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_36_qs)
   );
 
   // Subregister 37 of Multireg dout
-  // R[dout_37]: V(True)
+  // R[dout_37]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_37 (
-    .re     (dout_37_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[37].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[37].de),
+    .d      (hw2reg.dout[37].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_37_qs)
   );
 
   // Subregister 38 of Multireg dout
-  // R[dout_38]: V(True)
+  // R[dout_38]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_38 (
-    .re     (dout_38_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[38].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[38].de),
+    .d      (hw2reg.dout[38].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_38_qs)
   );
 
   // Subregister 39 of Multireg dout
-  // R[dout_39]: V(True)
+  // R[dout_39]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_39 (
-    .re     (dout_39_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[39].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[39].de),
+    .d      (hw2reg.dout[39].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_39_qs)
   );
 
   // Subregister 40 of Multireg dout
-  // R[dout_40]: V(True)
+  // R[dout_40]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_40 (
-    .re     (dout_40_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[40].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[40].de),
+    .d      (hw2reg.dout[40].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_40_qs)
   );
 
   // Subregister 41 of Multireg dout
-  // R[dout_41]: V(True)
+  // R[dout_41]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_41 (
-    .re     (dout_41_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[41].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[41].de),
+    .d      (hw2reg.dout[41].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_41_qs)
   );
 
   // Subregister 42 of Multireg dout
-  // R[dout_42]: V(True)
+  // R[dout_42]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_42 (
-    .re     (dout_42_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[42].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[42].de),
+    .d      (hw2reg.dout[42].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_42_qs)
   );
 
   // Subregister 43 of Multireg dout
-  // R[dout_43]: V(True)
+  // R[dout_43]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_43 (
-    .re     (dout_43_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[43].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[43].de),
+    .d      (hw2reg.dout[43].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_43_qs)
   );
 
   // Subregister 44 of Multireg dout
-  // R[dout_44]: V(True)
+  // R[dout_44]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_44 (
-    .re     (dout_44_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[44].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[44].de),
+    .d      (hw2reg.dout[44].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_44_qs)
   );
 
   // Subregister 45 of Multireg dout
-  // R[dout_45]: V(True)
+  // R[dout_45]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_45 (
-    .re     (dout_45_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[45].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[45].de),
+    .d      (hw2reg.dout[45].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_45_qs)
   );
 
   // Subregister 46 of Multireg dout
-  // R[dout_46]: V(True)
+  // R[dout_46]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_46 (
-    .re     (dout_46_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[46].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[46].de),
+    .d      (hw2reg.dout[46].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_46_qs)
   );
 
   // Subregister 47 of Multireg dout
-  // R[dout_47]: V(True)
+  // R[dout_47]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_47 (
-    .re     (dout_47_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[47].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[47].de),
+    .d      (hw2reg.dout[47].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_47_qs)
   );
 
   // Subregister 48 of Multireg dout
-  // R[dout_48]: V(True)
+  // R[dout_48]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_48 (
-    .re     (dout_48_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[48].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[48].de),
+    .d      (hw2reg.dout[48].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_48_qs)
   );
 
   // Subregister 49 of Multireg dout
-  // R[dout_49]: V(True)
+  // R[dout_49]: V(False)
 
-  prim_subreg_ext #(
-    .DW    (32)
+  prim_subreg #(
+    .DW      (32),
+    .SWACCESS("RO"),
+    .RESVAL  (32'h0)
   ) u_dout_49 (
-    .re     (dout_49_re),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
     .we     (1'b0),
-    .wd     ('0),
-    .d      (hw2reg.dout[49].d),
-    .qre    (),
+    .wd     ('0  ),
+
+    // from internal hardware
+    .de     (hw2reg.dout[49].de),
+    .d      (hw2reg.dout[49].d ),
+
+    // to internal hardware
     .qe     (),
     .q      (),
+
+    // to register interface (read)
     .qs     (dout_49_qs)
   );
 
@@ -2737,106 +3187,6 @@ module keccak_data_reg_top #(
 
   assign din_49_we = addr_hit[49] & reg_we & !reg_error;
   assign din_49_wd = reg_wdata[31:0];
-
-  assign dout_0_re = addr_hit[50] & reg_re & !reg_error;
-
-  assign dout_1_re = addr_hit[51] & reg_re & !reg_error;
-
-  assign dout_2_re = addr_hit[52] & reg_re & !reg_error;
-
-  assign dout_3_re = addr_hit[53] & reg_re & !reg_error;
-
-  assign dout_4_re = addr_hit[54] & reg_re & !reg_error;
-
-  assign dout_5_re = addr_hit[55] & reg_re & !reg_error;
-
-  assign dout_6_re = addr_hit[56] & reg_re & !reg_error;
-
-  assign dout_7_re = addr_hit[57] & reg_re & !reg_error;
-
-  assign dout_8_re = addr_hit[58] & reg_re & !reg_error;
-
-  assign dout_9_re = addr_hit[59] & reg_re & !reg_error;
-
-  assign dout_10_re = addr_hit[60] & reg_re & !reg_error;
-
-  assign dout_11_re = addr_hit[61] & reg_re & !reg_error;
-
-  assign dout_12_re = addr_hit[62] & reg_re & !reg_error;
-
-  assign dout_13_re = addr_hit[63] & reg_re & !reg_error;
-
-  assign dout_14_re = addr_hit[64] & reg_re & !reg_error;
-
-  assign dout_15_re = addr_hit[65] & reg_re & !reg_error;
-
-  assign dout_16_re = addr_hit[66] & reg_re & !reg_error;
-
-  assign dout_17_re = addr_hit[67] & reg_re & !reg_error;
-
-  assign dout_18_re = addr_hit[68] & reg_re & !reg_error;
-
-  assign dout_19_re = addr_hit[69] & reg_re & !reg_error;
-
-  assign dout_20_re = addr_hit[70] & reg_re & !reg_error;
-
-  assign dout_21_re = addr_hit[71] & reg_re & !reg_error;
-
-  assign dout_22_re = addr_hit[72] & reg_re & !reg_error;
-
-  assign dout_23_re = addr_hit[73] & reg_re & !reg_error;
-
-  assign dout_24_re = addr_hit[74] & reg_re & !reg_error;
-
-  assign dout_25_re = addr_hit[75] & reg_re & !reg_error;
-
-  assign dout_26_re = addr_hit[76] & reg_re & !reg_error;
-
-  assign dout_27_re = addr_hit[77] & reg_re & !reg_error;
-
-  assign dout_28_re = addr_hit[78] & reg_re & !reg_error;
-
-  assign dout_29_re = addr_hit[79] & reg_re & !reg_error;
-
-  assign dout_30_re = addr_hit[80] & reg_re & !reg_error;
-
-  assign dout_31_re = addr_hit[81] & reg_re & !reg_error;
-
-  assign dout_32_re = addr_hit[82] & reg_re & !reg_error;
-
-  assign dout_33_re = addr_hit[83] & reg_re & !reg_error;
-
-  assign dout_34_re = addr_hit[84] & reg_re & !reg_error;
-
-  assign dout_35_re = addr_hit[85] & reg_re & !reg_error;
-
-  assign dout_36_re = addr_hit[86] & reg_re & !reg_error;
-
-  assign dout_37_re = addr_hit[87] & reg_re & !reg_error;
-
-  assign dout_38_re = addr_hit[88] & reg_re & !reg_error;
-
-  assign dout_39_re = addr_hit[89] & reg_re & !reg_error;
-
-  assign dout_40_re = addr_hit[90] & reg_re & !reg_error;
-
-  assign dout_41_re = addr_hit[91] & reg_re & !reg_error;
-
-  assign dout_42_re = addr_hit[92] & reg_re & !reg_error;
-
-  assign dout_43_re = addr_hit[93] & reg_re & !reg_error;
-
-  assign dout_44_re = addr_hit[94] & reg_re & !reg_error;
-
-  assign dout_45_re = addr_hit[95] & reg_re & !reg_error;
-
-  assign dout_46_re = addr_hit[96] & reg_re & !reg_error;
-
-  assign dout_47_re = addr_hit[97] & reg_re & !reg_error;
-
-  assign dout_48_re = addr_hit[98] & reg_re & !reg_error;
-
-  assign dout_49_re = addr_hit[99] & reg_re & !reg_error;
 
   // Read data return
   always_comb begin
